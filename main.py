@@ -51,8 +51,7 @@ class callCenter():#writing a call center simulation class
             if self.available_signal_checking(self.arrival_queue):
                 self.arrival(customer)
             # print(self.car_stereo_representative_queue)
-
-            # self.service()
+            self.service()
             # self.departure()
             # print("Car Stereo Queue: ", self.car_stereo_representative_queue)
             # print("Others Queue: ", self.others_representative_queue)
