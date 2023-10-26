@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1698340473 "/Users/nanspro/Library/CloudStorage/OneDrive-CityUniversityofNewYork/PhD/research_L1/modeling_simulation/JiaShua/main.tex" "main.pdf" "main" 1698340474 0
+["pdflatex"] 1698343810 "/Users/nanspro/Library/CloudStorage/OneDrive-CityUniversityofNewYork/PhD/research_L1/modeling_simulation/JiaShua/main.tex" "main.pdf" "main" 1698343812 0
   "/Users/nanspro/Library/CloudStorage/OneDrive-CityUniversityofNewYork/PhD/research_L1/modeling_simulation/JiaShua/main.tex" 1698340473 4229 5a0be6071ce94da4dd28ce3d2e34c813 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
@@ -34,8 +34,8 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1691714313 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1691714137 7883451 1030e0369365809317ae597d8e2124cb ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "call_center.png" 1698336399 116928 caee9d31d033502d68632deae117ee8e ""
-  "main.aux" 1698340474 713 42da252e2172a30cf16c921c60b9488c "pdflatex"
+  "call_center.png" 1698343765 790377 52c3a595921508990ac972173c5cb470 ""
+  "main.aux" 1698343812 713 42da252e2172a30cf16c921c60b9488c "pdflatex"
   "main.tex" 1698340473 4229 5a0be6071ce94da4dd28ce3d2e34c813 ""
   (generated)
   "main.aux"

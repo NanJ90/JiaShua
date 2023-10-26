@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.10)  26 OCT 2023 13:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.10)  26 OCT 2023 14:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -198,11 +198,11 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/local/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-<call_center.png, id=1, 1333.98375pt x 1141.26375pt>
+<call_center.png, id=1, 5335.935pt x 4565.055pt>
 File: call_center.png Graphic file (type png)
 <use call_center.png>
 Package pdftex.def Info: call_center.png  used on input line 40.
-(pdftex.def)             Requested size: 516.73338pt x 442.07841pt.
+(pdftex.def)             Requested size: 516.73338pt x 442.04358pt.
 
 Overfull \hbox (46.97836pt too wide) in paragraph at lines 40--41
  [][] 
@@ -220,7 +220,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  57i,7n,62p,898b,237s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (2 pages, 101223 bytes).
+Output written on main.pdf (2 pages, 363682 bytes).
 PDF statistics:
  29 PDF objects out of 1000 (max. 8388607)
  16 compressed objects within 1 object stream
