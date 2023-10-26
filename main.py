@@ -15,6 +15,22 @@ def generate_event_type():
 def delay(minutes):
     # Simulate delay for given number of minutes
     pass
+
+def generate_statistic(event:pd.DataFrame) -> float:
+    #=========Mean===========
+    average_waiting_time = sum(event['arrival'])/len(event)
+    total_waiting_time = sum(event['waiting_time']) # or sum(event['departure_time'] - event['arrival'] - event['service_time'])
+    average_waiting_time = total_waiting_time/len(event)
+    #=========Variance===========
+    variance_waiting_time = sum((event['waiting_time'] - average_waiting_time)**2)/len(event)
+    #=========Standard Deviation===========
+    standard_deviation_waiting_time = variance_waiting_time**(1/2)
+    #=========Confidence Interval===========
+    # 95% confidence interval
+    confidence_interval_waiting_time = [average_waiting_time - 1.96*(standard_deviation_waiting_time/(len(event)**(1/2))),average_waiting_time + 1.96*(standard_deviation_waiting_time/(len(event)**(1/2)))]
+    # for i in range(len(event)):
+    #     event.iloc[i]['waiting_time'] = event.iloc[i]['departure_time'] - event.iloc[i]['arrival'] - event.iloc[i]['service_time']
+    return average_waiting_time, variance_waiting_time, standard_deviation_waiting_time, confidence_interval_waiting_time
 # Class specifics:
 # - time is measured in minutes
 # - customers refer to callers

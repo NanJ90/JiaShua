@@ -1,192 +1,47 @@
-\documentclass[twocolumn]{sintr}
-\setlength\parindent{0pt}
-\usepackage{lipsum}  
+\documentclass{article}
 
-% 
-% Volume, issue, year, page range
-\articleinformation{Vol xx, No x, xxxx, xx–xx} 
-% 
-% Truncated volume, issue, page range
-\articleinformationtruncated{xx(x): xx–xx} 
-%
-% BSMS Thesis / Winter Project / Summer Project / Project
-\articletype{BSMS/Short Thesis} 
-%
-% \submitted{20 January 2023} 
-%
-% Article title
-\title{JiaShua}
-%
-\articleshorttile{Give a short Title of the Project/Thesis}
-% Author(s)
-%
-\author{Nan Jia}
-\author{Joshua Rollings}
-%
-% Author name(s) as they should appear in the header
-\authorheader{Short Names of Authors}
-%
-%
-%% ==>
-%
-%--------------------------------------------------
-% Author(s) affiliations                      -->  
-%--------------------------------------------------
-%
-%% ==>
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
 
-%
-\affil[1]{1F5 - AB2, Department of Physical Sciences, IISER Mohali}
-\affil[2]{1F5 - AB2, Department of Physical Sciences, IISER Mohali}
-%% ==>
-
-% Corresponding author
-\affil[$\mbox{*}$]{Corresponding author: \href{mailto:sjena@iisermohali.ac.in}{sjena@iisermohali.ac.in}}
-%
-% Abstract
-\abstract{The abstract introduces the reader to the background and objective of the work in a few sentences, the methods used in 3-10 sentences, the principal results in a few sentences, and conclusions in a line. It should be concise and written in 300-500 words in a single paragraph, or better to avoid abbreviations and citations. }
-
-% Keywords
-\keywords{Alphabetical order \\ 
-Maximum five keywords \\
-Avoid terms already in \\
-\hphantom{} the title}
-
-% PDF metadata (authors ignore)
+% Redefining maketitle to adjust the title font size
 \makeatletter
-\hypersetup{pdftitle={\@title},pdfauthor={\authorheader}, pdfkeywords={\keywords}, pdfsubject={\abstract}}
+\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}
+\begin{flushleft}
+  \textbf{\LARGE \@title} \\ % Change \LARGE to desired size if needed
+  \vspace{0.5em}
+  \@author
+\end{flushleft}\egroup
+}
 \makeatother
 
-\makeatletter
-\def\MT@warn@unknown{}
-\makeatother
-
-
+\title{JiaShua - A Complex System Simulation: A Report}
+\author{Nan Jia, Joshua Rollins}
 
 \begin{document}
-\setcounter{page}{1}
 \maketitle
-
-\thispagestyle{firststyle}
-%\linenumbers % Add line numbers
+\section*{Abstract}
+This report demonstrates the simulation of a complex system. The system is a call center with various random variables that affect the system. The report will show the simulation of the system and the results of the simulation.
 
 \section{Introduction}
+This mid-term project is to simulation the call center mechanism. The call center is a complex system with various variables including server state, event calendar, global variables for tracking and measuring performance, and random variables. Those elements aims to mimic a real-life call center scenaio and to provide a way to measure the performance of the call center. The programming language used is \emph{Python}. This report consists of the following sections: system description, simulation method, simulation result, and conclusion.
 
-This section should briefly explain the background of the study, provide a short review of the pertinent literature, state the originality or novelty of the research, and state the research objectives.
+\section{System Description}
+A major auto retailer's call center is examined for its call processing, especially during midday peak times in the upcoming holiday season. When customers call, they connect to a switch. If more than ten calls are on hold, the customer receives a busy tone and hangs up. If not, the call proceeds to an interactive voice response (IVR) unit where callers choose between car-stereo products or other products. The call is then queued according to the product type until a sales representative is available. The goal is to determine the minimum number of sales representatives required to ensure less than 2\% of calls wait more than 1 minute and less than 3% are refused at the switch.
 
-\section{Subsequent Sections}
+Key assumptions include the instantaneous action of the switch and the IVR unit's capacity to handle multiple calls simultaneously. The IVR involves a pure delay, which must be accounted for. The project employs a physical random number generator using two dice (DICE). This DICE determines various delays and product type requests. For instance, the time between call arrivals is calculated as (DICE * 0.333) minutes. The IVR unit's delay is (DICE * 0.3) minutes, while car-stereo and other product processing times are (DICE * 2) minutes and (DICE) minutes respectively. Lastly, if the DICE rolls a value less than or equal to 4, it's assumed the call is for a car stereo, representing an average 16.7\% of all calls. Otherwise, it's for other products.
 
-Write down the report and add enough sections accordingly.
+\section{Simulation Method}
+This section will present the big picture of the simulation as Figure~\ref{fig:call_center}. We start an infinite loop within the main function. When we call this function, the server will be turn on. Then, the program will checking whether it is $4$ pm because the business hours is from $11$ to $4$ that is $300$ minutes. It will directly walk to Event 5: simulation termination. After those system's checking, event calendar will be ready to feed into the core functionality of this call center. 
 
-\section{Various Commands}
-\subsection{Tables}
-
-Size a table to fit in a single column (Table \ref{tab:1}) or across two columns (Table \ref{tab:2}). Avoid large tables (i.e., those that fit more than a single page), unless necessary.
-
-Every table and figure should be cited in the text in numerical order (i.e., Table 2 cannot be cited before Table 1). Place table footnotes below the table, indicating them with superscripted lowercase letters or asterisks (for significance values and other statistical data).
-
-%
-%
-%---------------------------------------------
-%
-
-\subsubsection{Table captions}
-Every table should have a concise but clear caption to explain its main components independently from the text. If the table contains previously published material, cite the original source at the end of the caption. If the results are expressed as a percentage, state the absolute value(s) that correspond to 100\%.
-
-\begin{table}[b]
-  	\centering\footnotesize\sffamily
-  	\caption{Example single-column table.}
-  	\begin{tableminipage}{\linewidth}
-    	\begin{tabularx} {\linewidth}{XXX}
-			\toprule
-            Column 1\textsuperscript{a} & Column 2 & Column 3  \\            
-	    	\midrule
-             1 &  1 &  1 \\
-             2 &  2 &  2 \\
-             3 &  3 &  3 \\
-             4 &  4 &  4 \\
-             5 &  5 &  5 \\
-            \bottomrule
-    	\end{tabularx}
-        \label{tab:1}
-        \vskip0pt
-        \textsuperscript{a}Example footnote.
-  	\end{tableminipage}
-\end{table}
-
-\begin{table*}[t]
-  	\centering\footnotesize\sffamily
-  	\caption{Example double-column table.}
-  	\begin{tableminipage}{\linewidth}
-    	\begin{tabularx} {\linewidth}{XXXXXX}
-			\toprule
-            Column 1 & Column 2 & Column 3 & Column 4 & Column 5 & Column 6 \\            
-	    	\midrule
-             11 &  12 &  13 &  14 &  15 &  16 \\
-             21 &  22 &  23 &  24 &  25 &  26 \\
-             31 &  32 &  33 &  34 &  35 &  36 \\
-             41 &  42 &  43 &  44 &  45 &  46 \\
-             51 &  52 &  53 &  54 &  55 &  56 \\
-            \bottomrule
-    	\end{tabularx}
-        \label{tab:2}
-  	\end{tableminipage}
-\end{table*}
-
-\subsection{Figures}
-
-Ensure that the figure will fit into either one column (Figure \ref{fig:1}) or two columns (Figure \ref{fig:1}). Images should be of sufficiently high resolution to be easily viewable when printed or on high-resolution screens (minimum of 300 dpi).
-
-Every figure should be cited in the text in numerical order (i.e. Figure 2 cannot be cited before Figure 1). Figures should be referred to as "Figure" not "Fig." Denote figure parts with lowercase letters (e.g. Figure 1a, Figure 1b).
-
-\subsubsection{Figure formatting}
-
-Photographs must have internal scale markers and symbols; arrows or letters should contrast greatly with the background. Fira Sans is the recommended typeface for text within figures (if you don’t have it installed on your computer, you can download it from Google Fonts). Otherwise, a sans-serif such as Open Sans or Helvetica may be used. Where photographs of gel, autoradiograms, and so on have been processed to enhance their quality, this should be stated.
-
-
-\lipsum[1]
-
-\subsubsection{Figure captions}
-
-Every figure should have a concise but clear caption to explain its main components independently from the text. If the figure contains previously published material, cite the source at the end of the caption.
-
-\begin{figure}[!b]
-	\centering
-	\includegraphics[width=\linewidth]{Figure1.pdf}
-	\caption{Example figure caption for a single-column image.}
-	\label{fig:1}
+First, the program will verify whether there is an availbale spot to serve the incoming customer as shown in Figure~\ref{fig:call_center}, the box of Busy Signal. If not, the customer will hang up. Otherwise, the customer will be served by the server. The server will check whether the customer is calling for car stereo or other products. If the customer is calling for car stereo, the server will serve the customer for randome minutes. After the server finishes serving the customer, the server will check whether there is a customer in the queue. If there is a customer in the queue, the server will serve the customer. Otherwise, this representative  will be set available. 
+\begin{figure}[t!]
+\centering
+\includegraphics[width=1.1\textwidth]{call_center.png}
+\caption{Call Center Controlflow Chart}
+\label{fig:call_center}
 \end{figure}
 
-\lipsum[1]
-
-
+\section{Simulation Result}
 \section{Conclusion}
-
-Present the study's main conclusions, along with their implications for future research or science and technology policy in the ASEAN region.
-
-\section*{Acknowledgement}
-
-Please acknowledge anyone who contributed to the research or the writing of the manuscript, as well as any funding or grants received in support of it. The names of funding organizations should be written in full, along with the grant numbers, if available. Examples of individuals you should acknowledge include people who assisted with study design or analysis, or guidance through a study area, or who provided advice on the language, edited, or proofread the article.
-
-\lipsum[2-10]
-
-\section*{AUTHORS’ CONTRIBUTIONS}
-
-Each author’s contribution to the research and manuscript should be noted, using only their initials to indicate their names. For example, “MP, FW designed the study. MP, LS carried out the laboratory work. MP, FW, LS, DN analyzed the data. MP, FW, DN wrote the manuscript. All authors read and approved the final version of the manuscript.”
-
-\section*{COMPETING INTERESTS}
-
-All competing interests—financial, professional, or personal relationships relevant to the submitted work—must be declared. This should be clearly stated if a funding source contributed to the manuscript's design, data collection, analysis, or writing or the decision to submit it to AJSTD. If one or more authors have any form of—past or present—relationship with AJSTD, the extent of this relationship must be described. This must also be clearly stated if one or more authors work or have worked for an organization that may benefit from the article's publication. Please read AJSTD’s Publication Ethics statement to understand why it is essential to acknowledge any competing interests.
-
-\lipsum[1]
-
-\lipsum[2-14]
-
-\section*{References and Citations}
-Please put the references in a separate file, like ref. Bib like this template. You must use the Bibtex format. Preparing the Bibtex reference format is very simple; you can use inspire hep.net  to get the reference in BibTex format. Then use \cite{aa} to cite the references  \cite{bb}. 
-
-\bibliography{ref}
-
-\atColsEnd{\vfill}
-
 \end{document}
