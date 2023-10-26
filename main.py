@@ -1,12 +1,16 @@
 import numpy as np
 import random
-
+import pandas as pd
 # Simulate two dice being rolled and their resulting rolls being summed
 def DICE():
     x1 = random.randint(1,6)
     x2 = random.randint(1,6)
     return x1 + x2
-
+def generate_event_type():
+    if DICE() <= 4:
+        return "car_stereo"
+    else:
+        return "others"
 # Class specifics:
 # - time is measured in minutes
 # - customers refer to callers
@@ -20,6 +24,21 @@ def DICE():
 # Main class
 ## To do:
 ## Timing and calendar
+class event_calendar():
+    def schedule_event(self,event_time,event_type):
+        self.event_calendar.append([event_time,event_type])
+        self.event_calendar = sorted(self.event_calendar, key=lambda x: x[0])
+    
+    def next_event(self):
+        event_time,event_type = self.event_calendar.pop(0)
+        self.current_time = event_time
+
+        if event_type == "arrival":
+            customer = random.randint(1,12)
+            self.arrival(customer)
+        elif event_type == "departure":
+            # self.departure()
+            pass
 ## delay(), service() and removing customers from queue
 class callCenter():# a call center simulation class
     #set random seed
@@ -31,11 +50,12 @@ class callCenter():# a call center simulation class
         self.others_representative_queue = []
         self.server_state = 0 #0 = idle, 1 = busy
         self.current_time = 0
+        self.event_calendar = []
         # print("Call Center Simulation")
         
     # Input: customer - a random number generated representing if a customer is calling for car stereo or others
     # Assumption: Because the run function already handles the arrival queue busy signaling, we do not need to here
-    def arrival (self,customer):
+    def arrival (self,customer_df:pd.DataFrame):
         # 11am to 4pm - 5 hours of peak time
         if self.current_time > 300: #if time is greater than 5*60 = 300 minutes, then call center is closed
             print("Call Center Closed")
@@ -44,65 +64,86 @@ class callCenter():# a call center simulation class
         print("Arrival")
         
         # Delay at IVR unit
-        delay(DICE() * 0.3)
+        def delay(minutes):
+            # Simulate delay for given number of minutes
+            pass
         
-        if customer <= 4: #if random DICE number is <= 4, then add to car-stereo queue
+        if customer_df <= 4: #if random DICE number is <= 4, then add to car-stereo queue
             if len(self.car_stereo_representative_queue) > self.maximum_slots: #if there are no available spots for car stereo
                 if self.arrival_queue > self.maximum_slots:
                     print("No available slots")
                     return
-                self.arrival_queue.append(customer)
+                self.arrival_queue.append(customer_df)
                 
                 # Delay for car-stereo call processing
                 delay(DICE() * 2)
                 
             #there are availble spots for car stereo
             print("Add to Car Stereo Queue")
-            self.car_stereo_representative_queue.append(customer)
+            self.car_stereo_representative_queue.append(customer_df)
         #if random number is greater than 4, then add to others queue
         else:
             if len(self.others_representative_queue) > self.maximum_slots: #if there are no available spots for others
                 if self.arrival_queue > self.maximum_slots:
                     print("No available slots")
                     return 
-                self.arrival_queue.append(customer)
+                self.arrival_queue.append(customer_df)
                 
                 # Delay for other-product call processing
                 delay(DICE())
             print("Add to Others Queue")
-            self.others_representative_queue.append(customer)
+            self.others_representative_queue.append(customer_df)
 
-    def available_signal_checking(self, queue):
+    def available_signal_checking(self, queue)-> bool:
         if len(queue) > self.maximum_slots:
             return 0 #0 = no signal
         else:
             return 1 #1 = signal
-    
-    def run(self,customer):
+ 
+    def run(self,event_calendar:pd.DataFrame) -> None: 
         self.server_state = 1
+        customer_df = pd.DataFrame(columns = ['customer_id','event_time','service_time','event_type','product_type','wait_time','departure_time'])
+
         while self.server_state == 1:
             # self.current_time += 1
             # print("Time: ", self.time)
-
+    
             if self.available_signal_checking(self.arrival_queue):
-                self.arrival(customer)
-            # print(self.car_stereo_representative_queue)
-            self.service()
+                for i in range(len(event_calendar)):
+                    if event_calendar.iloc[i]['event_type'] == "arrival":
+                        self.arrival(event_calendar.iloc[i])
+                        customer_df.append(event_calendar.drop(i))
+                        event_calendar = event_calendar.drop(i)
+            # self.service()
             # self.departure()
             # print("Car Stereo Queue: ", self.car_stereo_representative_queue)
             # print("Others Queue: ", self.others_representative_queue)
             # print("Server State: ", self.server_state)
             # print("Time: ", self.time)
+            else:
+                print("No available slots")          
+
     
 
 
 def __main__():
     #implement the simulation clock and the advance of the simulation clock, as well as an event calendar (event list) which is a list of events as they are scheduled. In every simulation, there is only one calendar and it is ordered by the earliest scheduled-time first.
-    #generate 100 customers
-    customer_list = np.random.uniform(0,1,5)
-    print(customer_list)
-    test = callCenter()
-    test.run(customer_list[4])
 
+    # creating event calendar list
+    event_calendar_list = pd.DataFrame(columns = ['customer_id','event_time','service_time','event_type'])
+    event_calendar_list['customer_id'] = np.random.randint(1,6,5)
+    event_calendar_list['event_time'] = np.random.randint(0,300,5)
+    event_calendar_list['service_time'] = np.random.randint(0,300,5)
+    event_calendar_list['event_type'] = np.random.choice(["arrival"],5)
+    
+    event_calendar_list = event_calendar_list.sort_values(by=['event_time'])
+    # for col in event_calendar_list.columns:
+    #     print(event_calendar_list[col])
+    # print(event_calendar_list.iloc[0])
+    #initialize call center simulation
+    test = callCenter()
+    #run simulation
+    test.run(event_calendar_list)
+    
 if __name__ == "__main__":
     __main__()
