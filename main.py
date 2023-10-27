@@ -11,24 +11,28 @@ def DICE():
     x1 = random.randint(1,6)
     x2 = random.randint(1,6)
     return x1 + x2
-def generate_statistic(event:pd.DataFrame) -> float:
-    event = event[~event['departure_time'].isna()]
+
+# Insert dataframe of event history
+def generate_statistic(events:pd.DataFrame) -> float:
+    event = events[~events['departure_time'].isna()]
+    event['waiting time'] = event['departure_time'] - event['start_time'] - event['service_time']
+    
     #=========Mean===========
-    average_waiting_time = sum(event['start_time'])/len(event)
-    # total_waiting_time = sum(event['waiting_time']) 
-    total_waiting_time = sum(event['departure_time'] - event['start_time'] - event['service_time'])
+    total_waiting_time = sum(event['waiting time'])
     average_waiting_time = total_waiting_time/len(event)
     #=========Minimum===========
-    minimum_waiting_time = min(event['service_time']-event['start_time'])
+    minimum_waiting_time = np.min(event['waiting time'])
     #=========Variance===========
-    variance_waiting_time = (total_waiting_time - average_waiting_time)**2/len(event)
+    variance_waiting_time = np.var(event['waiting time'])#((total_waiting_time - average_waiting_time)**2)/len(event)
     #=========Standard Deviation===========
-    standard_deviation_waiting_time = variance_waiting_time**(1/2)
+    standard_deviation_waiting_time = np.sqrt(variance_waiting_time)
     #=========Confidence Interval===========
     # 95% confidence interval
     confidence_interval_waiting_time = [average_waiting_time - 1.96*(standard_deviation_waiting_time/(len(event)**(1/2))),average_waiting_time + 1.96*(standard_deviation_waiting_time/(len(event)**(1/2)))]
    
     return average_waiting_time, minimum_waiting_time,variance_waiting_time, standard_deviation_waiting_time, confidence_interval_waiting_time
+
+
 ## ============== Event class ==============         
 class callEvent:
     def __init__(self, time, event_type, product_type, start_time, service_time=None, departure_time=None):
@@ -60,8 +64,7 @@ def generate_arrival(time):
 #4. The delay for other-product call processing= (DICE) minutes. 
 
 class callCenter():# a call center simulation class
-    def __init__(self, IVR_MAX=10):
-        self.IVR_queue = 0 # a queue before others have decided to go to car-stereo or other.
+    def __init__(self, CALL_MAX=10):
         self.car_stereo_queue = []
         self.other_queue = []
         
@@ -72,7 +75,7 @@ class callCenter():# a call center simulation class
         self.event_calendar = pd.DataFrame(columns=['time','type','product_type','start_time','service_time','departure_time'])
         self.event_history = pd.DataFrame(columns=['time','type','product_type','start_time','service_time','departure_time'])
         
-        self.IVR_max = IVR_MAX # maximum queue length for call arrivals to splitter
+        self.call_max = CALL_MAX # maximum queue length for call arrivals to splitter
 
         
     def add_event(self, event):
@@ -109,7 +112,7 @@ class callCenter():# a call center simulation class
     def handle_event(self, event):
         if event.type == 'arrival':
             # If the parallel switching queue is too long, the caller hangs up
-            if self.IVR_queue > self.IVR_max:
+            if len(self.car_stereo_queue) + len(self.other_queue) > self.call_max:
                 busy_event = callEvent(time=self.clock, event_type='busy', product_type=event.product_type,
                                        start_time=event.start_time, service_time=0, departure_time=self.clock)
                 self.add_event(busy_event) # This doesn't need to be processed in event type as it is just logged
@@ -121,11 +124,9 @@ class callCenter():# a call center simulation class
             IVR_event = callEvent(time=self.clock+IVR_delay, event_type='IVR', product_type=event.product_type, 
                                   start_time=event.start_time, service_time=IVR_delay, departure_time=None)
             # Queue keeps track of current IVR queue, the IVR event makes sure it gets taken care of by the event handler
-            self.IVR_queue += 1 # IVR queue processing contains all current IVR_event including if it's empty 
             self.add_event(IVR_event)
             
         elif event.type == 'IVR':
-            self.IVR_queue -= 1
             
             # Split the IVR queue into car-stereo and others queue separation
             if event.product_type == 'car_stereo':
@@ -154,7 +155,7 @@ class callCenter():# a call center simulation class
         
         # Handle other queue and operation
         elif event.type == 'other_queue':
-            self.other_state = 'idle'
+            self.o_status = 'idle'
             self.service_completion(event, self.other_queue, DICE())
             
             
@@ -162,7 +163,7 @@ class callCenter():# a call center simulation class
         # Function to schedule a service event based on the delay
         new_event = callEvent(time=self.clock + delay, event_type=queue_type, 
                               product_type=event.product_type, start_time=event.start_time, 
-                              service_time=delay, departure_time=None)
+                              service_time=event.service_time + delay, departure_time=None)
         self.add_event(new_event)
 
     # Queue handling/status checking and departure creation
@@ -178,9 +179,10 @@ class callCenter():# a call center simulation class
                 self.schedule_service(next_event, 'other_queue', delay)
                 
         departure_event = callEvent(time=self.clock, event_type='departure', product_type=event.product_type, 
-                                    start_time=event.start_time, service_time=event.service_time + delay, 
-                                    departure_time=self.clock + delay)
+                                    start_time=event.start_time, service_time=event.service_time, 
+                                    departure_time=self.clock)
         self.log(departure_event)    
+            
             
 
 
