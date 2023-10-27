@@ -21,7 +21,10 @@
 \begin{document}
 \maketitle
 \section*{Abstract}
-This report demonstrates the design and simulation of a call center with various random variables that affect the system. The report will show the planning, design, structure, and simulation of the system along with the results of the simulation pertaining to its original variables and setup then our recommendations to meet the manager’s desired performance requirements.
+This report demonstrates the design and simulation of a call center with various random variables that affect the system. The report will show the planning, design, structure, and simulation of the system along with the results of the simulation pertaining to its original variables and setup then our recommendations to meet the manager’s desired performance requirements.\\
+\par
+Our GitHub repository is available here with simulation trials stored in Jupyter Notebooks and the main standard form in main.py:
+https://github.com/NanJ90/JiaShua
 
 \section{Introduction}
 This mid-term project is to simulate a call center mechanism, originally containing two queues, one for callers asking about car-stereos and one for other products. The call center is a complex system with multiple variable types. Those include server and queue statuses, event calendar, global variables for tracking and measuring performance, and random variables. Those elements aim to mimic a real-life call center scenario and to provide a way to measure the performance of the call center. The programming language used is \emph{Python}. This report consists of the following sections containing sections (1)-(10) of the project requirements: system description (1-4), simulation method (5-7), simulation result (8), and conclusion (9-10).
@@ -60,14 +63,16 @@ Car-stereo call processing: (DICE * 2) minutes \\
 Other-product call processing: (DICE) minutes \\
 \par
 4. Identify global variables that are used to track and measure performance; \\
-In lieu of individual global variables to track many metrics over simulations and iterations of simulations, we have used an event history DataFrame to track the performance. Measures of performance were taken from calculations from the event history, for example: Number delayed, total served customers, total waiting time, mean of waiting time, variance of waiting time, standard deviation of waiting time, 95% Confidence Interval of waiting time.
+In lieu of individual global variables to track many metrics over simulations and iterations of simulations, we have used an event history DataFrame to track the performance. Measures of performance were taken from calculations from the event history, for example: Number delayed, total served customers, total waiting time, mean of waiting time, variance of waiting time, standard deviation of waiting time, 95\% Confidence Interval of waiting time.
 
 
 
 \section{Simulation Method}
 
-5. Construct the random number generator, DICE
-We constructed the random number generator, DICE, using the random integer generation function from python’s random package. Producing a number from 1 to 6 with a uniform distribution, we sum two independent rolls to get a normal distribution, as shown in the figure below containing a trial of the DICE function over 100,000 calls. \\
+5. Construct the random number generator, DICE \\
+\par
+
+We constructed the random number generator, DICE, using the random integer generation function from python’s random package. Producing a number from 1 to 6 with a uniform distribution, we sum two independent rolls to get a roughly normal distribution, which was confirmed after we ran a trial of the DICE function over 100,000 calls. \\
 \par
 
 6. Implement the simulation clock and the advance of the simulation clock, as well as an event calendar (event list) which is a list of events as they are scheduled. In every simulation, there is only one calendar and it is ordered by the earliest scheduled-time first. \\
@@ -88,14 +93,44 @@ First, the program will verify whether there is an available spot to serve the i
 \end{figure}
 
 \section{Simulation Result}
-8. Develop and run your simulation program with the given initial and end conditions:  Simulation start with “empty and idle” condition (no cars arrival yet, queues are empty and servers are idle).  Simulation runs for midday peak hours from 11am to 4pm, no break during operation.  You need to run the simulation multiple time (N=30 iterations or replications) to get statistical answers to the manager’s questions, as well as other key performance measures, (such as server utilization, maximum, average, minimum values of waiting time in each queue) in terms of means, standard deviation and a confident interval with 95% confidence. 
+8. Develop and run your simulation program with the given initial and end conditions:  Simulation start with “empty and idle” condition (no cars arrival yet, queues are empty and servers are idle).  Simulation runs for midday peak hours from 11am to 4pm, no break during operation.  You need to run the simulation multiple time (N=30 iterations or replications) to get statistical answers to the manager’s questions, as well as other key performance measures, (such as server utilization, maximum, average, minimum values of waiting time in each queue) in terms of means, standard deviation and a confident interval with 95\% confidence. \\
+
+\par
+We ran 30 iterations of simulation runs for midday peak hours in different conditions and collected the statistics from each, shown in Figure~\ref{fig:mqr}.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=1.1\textwidth]{multiple_queue_results.png}
+\caption{Call Center Control Flow Chart}
+\label{fig:mqr}
+\end{figure}
+
 
 
 \section{Conclusion}
 9. Provide your recommendations (alternatives) to the manager as of how to improve the system to meet the performance goals. Justify your recommendations by run simulation with your recommended system configurations. This is called what-if analysis. \\
 \par
+The performance goals of the manager are that it have (i) fewer than 2\% of call waiting times for either product are greater than 1 min.\\
+\par
+As shown in the previous section, we ran many trials of varying numbers of representatives to get an understanding of the number of representatives required to meet the 2\% call waiting time goal. After the standard trials, we believed that 6 car-stereo queues and 12 other product queues. However that was shown not to be effective enough. Since the ratio of car-stereo to other product calls should be around 1/5 it would likely not be productive to increase the car-stereo representatives disproportionately. Therefore, we increased the car stereo queues to 10 and other product queues to 21. This only brought up a single percent closer to our goal, and while still 6\% off, we believe we would need a minimum of 10 car-stereo queues and 50 other product queues. We recommend 10 car-stereo queues and 50 other product queues.
 
-10. One of the recommendations is “cross-training” were all representatives to process both call types, all calls could wait in a single queue for the next available representative. 
+
+(ii) fewer than 3\% of all incoming calls are refused at the switch.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{standard_per_callers.png}
+\caption{At 62, fewer than 3\% of all incoming calls are refused at the switch}
+\label{fig:spc}
+\end{figure}
+
+We scanned the maximum number of callers allowed in the total queues and found that for the original system setup, we needed a call maximum of 62 to keep the percentage of calls refused at the switch to fewer than 3\%.
+\par
+10. One of the recommendations is “cross-training” were all representatives to process both call types, all calls could wait in a single queue for the next available representative.
+\par
+The single queue statistics performs similarly to the original setup, with only slight increases in queue time, which implies that the car stereo queue is not where a majority of the waiting time issues are. This is backed by the probability of having a car stereo call versus an other product call. "Cross-training" helps simplify the process however only having one "cross-trained" representative causes the longer car-stereo delays to give every caller increased wait time on top of the addition of callers in general. We recommend a total queue maximum of 62 callers to the manager.\\
+\par
+The system itself is interesting and allows for more adjustments in the future. Weighing the trade off between queue times and capping the total number of callers allowed in all queues could be explored further, and each parameter could be measured with different representatives available as well. Planning, designing, coding, and analyzing the results from this call center simulation has brought us a lot to consider in modeling and simulating more and more complex systems.
 
 
 \end{document}
